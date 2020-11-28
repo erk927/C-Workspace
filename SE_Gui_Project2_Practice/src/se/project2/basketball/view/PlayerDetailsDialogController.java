@@ -52,6 +52,7 @@ public class PlayerDetailsDialogController {
     	s.setText(String.valueOf(player.getSpg()));
     	b.setText(String.valueOf(player.getBpg()));
     	t.setText(String.valueOf(player.getTpg()));
+    	//Testing to make sure setup has gone as planned
     }
     
     /*************************************************************************************************************************
