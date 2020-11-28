@@ -1,0 +1,22 @@
+Too do List
+
+1. May want to move populateTeamChoiceBox, and choiceBoxSelection from MainApp class to PlayerOverview now that I got everything in 1 window
+
+
+
+----- Wednesday -----
+-- Update time log --
+ 	
+6. Add new features
+	-Stuff on project board
+	-Team banner where label is
+	•Details
+		-New dialog that shows image and all of a players stats vertically
+		-look for small player images and banners
+		-learn how images work
+	-
+ 
+ 7. Add Team view
+ 	-Opens new view with team names and the average of all the players in that teams stats
+ 	-Details button in this view should open up PLayerOverview with the highlighted team selected
+ 	-Not sure if Team should be a button or drop-down option or what?
