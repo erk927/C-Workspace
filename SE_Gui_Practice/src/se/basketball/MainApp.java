@@ -126,7 +126,7 @@ public class MainApp extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
-            dialogStage.setPlScene(scene);
+            dialogStage.setScene(scene);
 
             // Set the person into the controller.
             PlayerEditDialogController controller = loader.getController();
