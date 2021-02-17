@@ -26,6 +26,15 @@ public class AlgorithmsWork {
 	/*********************************************************************************/
 	//Implement algorithms, it's easier than I think
 	//*************************************
+	public static void FCFS() {
+		int time = 0;
+		for (int i = 0; i < numOfProcesses; i++) {
+			System.out.print("P" + i + " ");
+			if (arrivalTime.get(i) <= time) {
+				;
+			}
+		}
+	}
 
     /*************************************************************************************************************************
      * Read number of Processes from keyboard
