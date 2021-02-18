@@ -21,12 +21,13 @@ public class MainApp {
 		
 		System.out.println("-------------------------------");
 //		fcfs();
-		sjf();
+//		sjf();
+		srt();
 		
 		System.out.println("\n-------------------------------");
 		for(Process p: processes) {
-			System.out.print(p.getSjfWait() + " - ");
-			System.out.print(p.getSjfTurn() + "\n");
+//			System.out.print(p.getSjfWait() + " - ");
+//			System.out.print(p.getSjfTurn() + "\n");
 		}
 	}
 
@@ -135,16 +136,17 @@ public class MainApp {
 				Process p = list.get(i);
 				if (p.getArrivalTime() <= time) 
 				{
-					for (int j = i+1; j < list.size(); j++) 
-					{
-						Process p2 = list.get(j);
-						int minB = p.getBurstTime();
-						if ((p2.getArrivalTime() <= time) && (p2.getBurstTime() < minB))//if p2 arrived and burst is <
-						{
-							p = p2;//p becomes the shortest process
-							minB = p2.getBurstTime();
-						}
-					}
+//					for (int j = i+1; j < list.size(); j++) 
+//					{
+//						Process p2 = list.get(j);
+//						int minB = p.getBurstTime();
+//						if ((p2.getArrivalTime() <= time) && (p2.getBurstTime() < minB))//if p2 arrived and burst is <
+//						{
+//							p = p2;//p becomes the shortest process
+//							minB = p2.getBurstTime();
+//						}
+//					}
+					p = checkStatus(p, list, time);
 					System.out.print(p.getName() + " " + time + "-" + (time + p.getBurstTime()) + ", "); //Prints: P1 0-5,
 					sjfWaitTime(p, time);
 					time+= p.getBurstTime();//updates time
@@ -176,6 +178,76 @@ public class MainApp {
 		else {
 			processes.get(p.getIndex()).setSjfTurn(time-p.getArrivalTime());
 		}
+	}
+	
+	/*******************************************************************************************\
+     * SRT: Shortest Remaining Job algorithm
+    /*******************************************************************************************/
+	public static void srt() {
+		ArrayList<Process> list = new ArrayList<Process>(processes);
+		int time = -1;//Tracks time
+		
+		int timeInCpu = 0;
+		
+		while(list.size() > 0) 
+		{
+			time++;
+			int i = 0;
+			while (i < list.size()) 
+			{
+				Process p = list.get(i);
+				if (p.getArrivalTime() <= time) 
+				{
+					p = checkStatus(p, list, time);
+					System.out.print(p.getName() + " " + time + "-");// P1 0-
+					int ind = p.getIndex();
+					for (int j = p.getBurstTime(); j > 0; j--) {
+						timeInCpu++;
+						time++;
+						p.setBurstTime(p.getBurstTime()-1);
+						System.out.print("yyyyyyyyyyyy----- " + p.getBurstTime() + "------yyyyyyyyyyyyyyyyyyyyyyyyy");
+						p = checkStatus(p, list, time);
+						if (p.getIndex() != ind) {
+							System.out.print((time+timeInCpu) + ", ");
+						}break;
+					}
+					
+					
+//					System.out.print(p.getName() + " " + time + "-" + (time + p.getBurstTime()) + ", "); //Prints: P1 0-5,
+//					srtWaitTime(p, time);
+//					time+= p.getBurstTime();//updates time
+////					sjfTurnTime(p, time);
+//					list.remove(list.indexOf(p));
+//					i = 0;//rechecks because time passed in other method
+//					continue;
+				}
+				i++;
+			}
+		}
+	}
+	
+	//***** check *****
+	public static Process checkStatus(Process p, ArrayList<Process> list, int time) {
+		for (int i = 0; i < list.size(); i++) {
+			Process p2 = list.get(i);
+			int minB = p.getBurstTime();
+			if ((p2.getArrivalTime() <= time) && (p2.getBurstTime() < minB))//if p2 arrived and burst is <
+			{
+				p = p2;//p becomes the shortest process
+				minB = p2.getBurstTime();
+			}
+		}
+		return p;
+	}
+	
+	//********** srtWaitTime ******************
+	public static void srtWaitTime(Process p, int time) {
+//		if ((time - p.getArrivalTime()) <= 0){// if wait time is 0
+//			processes.get(p.getIndex()).setSrtWait(0);
+//		}
+//		else {
+//			processes.get(p.getIndex()).setSrtWait(time-p.getArrivalTime());
+//		}
 	}
 }
 
