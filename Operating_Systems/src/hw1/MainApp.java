@@ -21,8 +21,9 @@ public class MainApp {
 		
 		System.out.println("-------------------------------");
 //		fcfs();
-//		sjf();
-		srt();
+		sjf();
+//		srt();
+//		testSrt();
 		
 		System.out.println("\n-------------------------------");
 		for(Process p: processes) {
@@ -204,7 +205,7 @@ public class MainApp {
 					for (int j = p.getBurstTime(); j > 0; j--) {
 						timeInCpu++;
 						time++;
-						p.setBurstTime(p.getBurstTime()-1);
+//						p.setBurstTime(p.getBurstTime()-1);
 						System.out.print("yyyyyyyyyyyy----- " + p.getBurstTime() + "------yyyyyyyyyyyyyyyyyyyyyyyyy");
 						p = checkStatus(p, list, time);
 						if (p.getIndex() != ind) {
@@ -248,6 +249,57 @@ public class MainApp {
 //		else {
 //			processes.get(p.getIndex()).setSrtWait(time-p.getArrivalTime());
 //		}
+	}
+	
+	
+	
+	
+	
+	
+	/******************************************************************************************************************************************/
+	
+	public static void testSrt() {
+		ArrayList<Process> list = new ArrayList<Process>(processes);
+		int time = -1;
+		
+		int timeInCpu = 0;
+		
+		boolean mark = true;
+		
+		while (list.size() > 0) //While there are still processes in list
+		{
+			time++;
+			int i = 0;
+			while (i < list.size()) 
+			{
+				Process p = list.get(i);
+				Process sp = p; //Shortest process
+				
+				if (p.getArrivalTime() <= time) 
+				{
+					int newTime = time;
+					sp = checkStatus(p, list, time);//checks if any other p has arrived and is shorter
+					
+					while (checkStatus(sp, list, time) == sp)//while og job is the shortest
+					{
+						if (sp.getBurstTime() == 0) {
+							processes.get(sp.getIndex()).setSrtTurn(newTime-sp.getArrivalTime());
+							processes.get(sp.getIndex()).setSrtWait(sp.getSrtTurn()-sp.getBurstTime());
+							break;
+						}
+						timeInCpu+= sp.decrementBT();//TiC++
+						newTime++;
+					}
+					System.out.print(sp.getName() + " " + time + "-" + newTime + ", ");// P1 1-3, 
+					if (sp.getBurstTime() == 0) {list.remove(sp.getIndex());}//if process is complete
+					time = newTime -1;//cause times gonna increment by 1
+					timeInCpu = 0;
+					i = 0;
+					continue;//skips i++, and rechecks list cause checkStatus while loop failed
+				}
+				i++;
+			}
+		}
 	}
 }
 
