@@ -21,7 +21,11 @@ public class TestApp {
 		getNumOfProcesses(input);
 		
 		System.out.println("-------------------------------");
-		
+		testSrt();
+		System.out.println();
+		for (Process p: processes) {
+			System.out.println(p.getSrtWait());
+		}
 	}
 
 	/*******************************************************************************************\
@@ -66,102 +70,81 @@ public class TestApp {
 		timeQuantum = input.nextInt();
 	}
 	
-	//Finds shortest remaining job***************************************************************************************
+	//Finds shortest remaining job **************************************************************************************
 	public static Process shortestP(Process p, ArrayList<Process> list, int time) {
-		for (int j = 0; j < list.size(); j++)//Cycles through all Processes again
-		{
+		for (int j = 0; j < list.size(); j++) {//Cycles through all Processes
 			Process p2 = list.get(j);//Process compared against
 			if ((p2.getArrivalTime() <= time) && (p2.getBurstTime() < p.getBurstTime()))//If shorter Process found
-			{
 				p = p2;
-			}
+			
 		}
-		
 		return p;
 	}
 	
-	//Checks if given Process has Arrived *******************************************************************************
-	private static boolean hasArrived(Process p, int time) {
-		if (p.getArrivalTime() <= time)
-			return true;
-		
+	//Checks if any Process has Arrived **********************************************************************************
+	private static boolean hasArrived(ArrayList<Process> list, int time) {
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getArrivalTime() <= time)
+				return true;
+		}
 		return false;
 	}
 	
-	private static void doStuff() {
-		/**
-		 * does stuff in SRT
-		 * */
-	}
-	
-	/************************************************************************
-	 * 
-	 * **********************************************************************/
+	/**************************************************************************************************************\
+	* 
+	\* ************************************************************************************************************/
 	public static void testSrt() {
 		ArrayList<Process> list = new ArrayList<Process>(processes);
+		
+		//Creates a copy of Process Burst Times
+		int burstTimes[] = new int[list.size()];
+		for(int i = 0; i < burstTimes.length; i++) {
+			burstTimes[i] = list.get(i).getBurstTime();
+		}
+			
 		int time = 0;
+		int timeInCpu = 0;//TiC
 		
-		int timeInCpu = 0;
+		Process psp = list.get(0);//Previous shortest Process
+		boolean fl = true;//First loop
 		
-		//Can ignore this while cause it runs until list is empty
+		
 		while (list.size() > 0) //While there are still processes in list
 		{
-			for (int i = 0; i < list.size(); i++) //Cycle through list once 
+			if (hasArrived(list, time)) //If a Process has arrived
 			{
-				if (hasArrived(list.get(i), time))//Checks if current Process has Arrived
-				{
-					Process p = shortestP(list.get(i), list, time);//Sets p equal to SRJ
-					//TODO : Thinking of having another method the does the logic for the Process
-					//Need to increment time and make it accurate with time++ below (may use newTime)
-					//Need to Print gant chart
-				}
+				while (hasArrived(list, time)) //While there are arrived Processes
+				{//WL2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+					Process sp = shortestP(list.get(0), list, time);//Sets p equal to SRJ
+					if (fl == true) {psp = sp; fl = false;}//Maintains accuracy
 					
-			}
-			time++;
+					if (sp.getBurstTime() == 0) {//When process completes
+						System.out.print(" [~" + sp.getArrivalTime() + "|" + time + "]");/** For testing purposes**/
+						System.out.print(sp.getName() + " " + (time-timeInCpu) + "-" + time + ", ");//Print Gant info
+						sp.setSrtTurn(time - sp.getArrivalTime());//Set TurnAroundTime
+						sp.setSrtWait(sp.getSrtTurn() - burstTimes[sp.getIndex()]);//Set ArrivalTime
+						list.remove(list.indexOf(sp));//Remove Process from list
+						timeInCpu = 0;//Reset timeInCpu
+						fl = true;
+					}
+					else if (sp == psp) {//If current Process is still SRJ
+						timeInCpu += sp.decrementBT();//Increase TiC by 1, decrease BT by 1
+						time++;
+					} 
+					else {//If shorter Process arrives
+						System.out.print(" [*" + psp.getName() + "] ");/** For testing purposes**/
+						System.out.print(psp.getName() + " " + (time-timeInCpu) + "-" + time + ", ");//Print Gant info
+						timeInCpu = 0;//Reset timeInCpu
+						fl = true;
+					}
+				}// End WL2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			} 
+			else { time++; }//If no Process has arrived
+		}
+		
+		//Resets Burst Times
+		for(int i = 0; i < burstTimes.length; i++) {
+			processes.get(i).setBurstTime(burstTimes[i]);
 		}
 	}
-	
-	/** Things to do 
-	 *	-Decrease Burst time for every increment
-	 *	-Increase time for every increment
-	 *		-Make sure time is accurate, cause I'm increasing it inside a loop
-	 *	-Print gant chart	
-	 *
-	 ** After you have the shortest Process
-	 *	-track  
-	 * */
-	
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

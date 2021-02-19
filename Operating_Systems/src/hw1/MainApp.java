@@ -21,9 +21,9 @@ public class MainApp {
 		
 		System.out.println("-------------------------------");
 //		fcfs();
-//		sjf();
+		sjf();
 //		srt();
-		testSrt();
+//		testSrt();
 		
 		System.out.println("\n-------------------------------");
 		for(Process p: processes) {

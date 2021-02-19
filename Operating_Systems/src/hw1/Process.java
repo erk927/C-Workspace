@@ -27,8 +27,12 @@ public class Process {
 		this.burstTime = burstTime;
 		index = num;
 	}
-
 	
+	//Decreases Burst time by 1
+	public int decrementBT() { 
+		burstTime--; 
+		return 1;
+	}
 
 	//********** Getters and Setters ******************************************************
 	public String getName() { return name; }
@@ -36,7 +40,7 @@ public class Process {
 	public int getArrivalTime() { return arrivalTime; }
 
 	public int getBurstTime() { return burstTime; }
-	public int decrementBT() { burstTime--; return 1;}
+	public void setBurstTime(int burstTime) {this.burstTime = burstTime; }
 	
 	public int getIndex() { return index; }
 
