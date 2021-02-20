@@ -22,7 +22,7 @@ public class MainApp {
 		Scanner input = new Scanner(System.in);
 		getNumOfProcesses(input);
 		
-		System.out.println("-------------------------------");
+		System.out.println("---------------------------------------------------------------");
 		fcfs();
 		sjf();
 		srt();
@@ -213,7 +213,6 @@ public class MainApp {
 					if (fl == true) {psp = sp; fl = false;}//Maintains accuracy
 					
 					if (sp.getBurstTime() == 0) {//When process completes
-//						System.out.print(" [~" + sp.getArrivalTime() + "|" + time + "]");/** For testing purposes**/
 						System.out.print(sp.getName() + " " + (time-timeInCpu) + "-" + time + ", ");//Print Gant info
 						sp.setSrtTurn(time - sp.getArrivalTime());//Set TurnAroundTime
 						sp.setSrtWait(sp.getSrtTurn() - burstTimes[sp.getIndex()]);//Set ArrivalTime
@@ -226,7 +225,6 @@ public class MainApp {
 						time++;
 					} 
 					else {//If shorter Process arrives
-//						System.out.print(" [*" + psp.getName() + "] ");/** For testing purposes**/
 						System.out.print(psp.getName() + " " + (time-timeInCpu) + "-" + time + ", ");//Print Gant info
 						timeInCpu = 0;//Reset timeInCpu
 						fl = true;
@@ -251,7 +249,9 @@ public class MainApp {
 		return false;
 	}
 	
-	
+	/**************************************************************************************************************\
+	* RR: Round Robin Algorithm
+	/**************************************************************************************************************/
 	public static void rr() {
 		System.out.println();
 		ArrayList<Process> list = new ArrayList<Process>(processes);
@@ -259,8 +259,7 @@ public class MainApp {
 		
 	}
 	
-	
-	// rr~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	//Finds round robin times -----------------------------------------
 	public static void rrWaitTime(int n, ArrayList<Process> list){
 		int completion_time[] = new int[n];
 		int rem_time[] = new int[n];
@@ -309,7 +308,7 @@ public class MainApp {
 	}
 	
 	/**********************************************************************************************************
-	 * 
+	 * Prints out Process information in table format
 	\*********************************************************************************************************/
 	public static void printTable() {
 		System.out.println();
@@ -331,7 +330,7 @@ public class MainApp {
 		System.out.printf("%5s%9.2f%10.2f%10.2f%10.2f\n", "Average Turn", fcfsAvgTurn, sjfAvgTurn, srtAvgTurn, rrAvgTurn);
 	}
 	
-	/********** find avg WT ********************/
+	/********** find average TT and WT ********************/
 	public static void findAvgWt(){
 		double f_wt = 0;
 		double f_tt = 0;
